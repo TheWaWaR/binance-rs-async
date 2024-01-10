@@ -1,3 +1,5 @@
+edition = "2021"
+
 # Enable unstable features on stable and beta channels (unstable features are available by default on nightly).
 # https://github.com/rust-lang/rustfmt/blob/master/Configurations.md#unstable_features
 unstable_features = true
