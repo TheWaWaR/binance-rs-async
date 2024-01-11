@@ -8,6 +8,8 @@ pub struct Config {
     pub futures_rest_api_endpoint: String,
     pub futures_ws_endpoint: String,
 
+    pub coin_futures_rest_api_endpoint: String,
+
     pub recv_window: u64,
 
     pub binance_us_api: bool,
@@ -27,6 +29,7 @@ impl Config {
             .set_rest_api_endpoint("https://testnet.binance.vision")
             .set_ws_endpoint("wss://testnet.binance.vision")
             .set_futures_rest_api_endpoint("https://testnet.binancefuture.com")
+            .set_coin_futures_rest_api_endpoint("https://testnet.binancefuture.com")
             .set_futures_ws_endpoint("wss://testnet.binancefuture.com")
     }
 
@@ -87,6 +90,26 @@ impl Config {
     /// ```
     pub fn set_futures_rest_api_endpoint<T: Into<String>>(mut self, futures_rest_api_endpoint: T) -> Self {
         self.futures_rest_api_endpoint = futures_rest_api_endpoint.into();
+        self
+    }
+
+    /// Sets the coin futures rest api endpoint. Defaults to <https://dapi.binance.com>.
+    ///
+    /// # Arguments
+    ///
+    /// * `coin_futures_rest_api_endpoint`:
+    ///
+    /// returns: Config
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use binance::config::Config;
+    /// let config = Config::default();
+    /// config.set_coin_futures_rest_api_endpoint("http://myendpoint:8080");
+    /// ```
+    pub fn set_coin_futures_rest_api_endpoint<T: Into<String>>(mut self, coin_futures_rest_api_endpoint: T) -> Self {
+        self.coin_futures_rest_api_endpoint = coin_futures_rest_api_endpoint.into();
         self
     }
 
@@ -166,6 +189,8 @@ impl Default for Config {
 
             futures_rest_api_endpoint: "https://fapi.binance.com".into(),
             futures_ws_endpoint: "wss://fstream.binance.com".into(),
+
+            coin_futures_rest_api_endpoint: "https://dapi.binance.com".into(),
 
             recv_window: 5000,
             binance_us_api: false,

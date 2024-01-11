@@ -20,10 +20,11 @@ rustls-tls = ["tokio-tungstenite/rustls-tls-webpki-roots", "reqwest/rustls-tls"]
 native-tls = ["tokio-tungstenite/native-tls", "reqwest/native-tls"]
 default = ["native-tls"]
 futures_api = []
+coin_futures_api = []
 margin_api = []
 savings_api = []
 wallet_api = []
-all_apis = ["futures_api", "margin_api", "savings_api", "wallet_api"]
+all_apis = ["futures_api", "coin_futures_api", "margin_api", "savings_api", "wallet_api"]
 
 [dependencies]
 chrono = { version = "0.4", features = ["serde"] }

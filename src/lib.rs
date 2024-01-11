@@ -80,6 +80,8 @@ pub mod api;
 pub mod config;
 #[cfg(feature = "futures_api")]
 pub mod futures;
+#[cfg(feature = "coin_futures_api")]
+pub mod coin_futures;
 pub mod general;
 #[cfg(feature = "margin_api")]
 pub mod margin;
