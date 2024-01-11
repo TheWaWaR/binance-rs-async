@@ -127,6 +127,13 @@ impl Market {
         self.client.get(API_V3_BOOK_TICKER, None).await
     }
 
+    /// -> Best price/qty on the order book for symbols
+    pub async fn get_book_tickers(&self, symbols: &[&str]) -> Result<BookTickers> {
+        let symbols_str = serde_json::to_string(symbols).expect("to json string");
+        let request = build_request([("symbols", symbols_str)]);
+        self.client.get(API_V3_BOOK_TICKER, Some(&request)).await
+    }
+
     /// -> Best price/qty on the order book for ONE symbol
     /// # Examples
     /// ```rust
