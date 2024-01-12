@@ -1,6 +1,6 @@
 use crate::client::Client;
 use crate::errors::Result;
-use crate::futures::rest_model::{FundingRate, HistoryQuery};
+use crate::futures::rest_model::{FundingRate, HistoryQuery, Trades};
 use crate::rest_model::{KlineSummaries, KlineSummary, OrderBook, PairQuery};
 use crate::util::{to_f64, to_i64};
 use serde_json::Value;
@@ -23,6 +23,30 @@ impl CoinFuturesMarket {
     {
         self.client
             .get_d("/dapi/v1/depth", Some(PairQuery { symbol: symbol.into() }))
+            .await
+    }
+
+    /// Get historical trades
+    pub async fn get_historical_trades<S1, S2, S3>(&self, symbol: S1, from_id: S2, limit: S3) -> Result<Trades>
+    where
+        S1: Into<String>,
+        S2: Into<Option<u64>>,
+        S3: Into<u16>,
+    {
+        self.client
+            .get_signed_p(
+                "/dapi/v1/historicalTrades",
+                Some(HistoryQuery {
+                    start_time: None,
+                    end_time: None,
+                    from_id: from_id.into(),
+                    limit: limit.into(),
+                    symbol: symbol.into(),
+                    interval: None,
+                    period: None,
+                }),
+                self.recv_window,
+            )
             .await
     }
 
