@@ -1,9 +1,13 @@
 use crate::client::Client;
 use crate::errors::Result;
 use crate::futures::rest_model::{FundingRate, HistoryQuery};
-use crate::rest_model::{OrderBook, PairQuery};
+use crate::rest_model::{KlineSummaries, KlineSummary, OrderBook, PairQuery};
+use crate::util::{to_f64, to_i64};
+use serde_json::Value;
 
 use super::rest_model::MarkPrice;
+
+// TODO: merge futures/market.rs AND coin_futures/market.rs
 
 #[derive(Clone)]
 pub struct CoinFuturesMarket {
@@ -62,5 +66,53 @@ impl CoinFuturesMarket {
                 self.recv_window,
             )
             .await
+    }
+
+    /// Returns up to 'limit' premium index klines for given symbol and interval ("1m", "5m", ...)
+    /// https://binance-docs.github.io/apidocs/futures/en/#premium-index-kline-data
+    pub async fn get_premium_index_klines<S1, S2, S3, S4, S5>(
+        &self,
+        symbol: S1,
+        interval: S2,
+        limit: S3,
+        start_time: S4,
+        end_time: S5,
+    ) -> Result<KlineSummaries>
+    where
+        S1: Into<String> + Send,
+        S2: Into<String> + Send,
+        S3: Into<u16> + Send,
+        S4: Into<Option<u64>> + Send,
+        S5: Into<Option<u64>> + Send,
+    {
+        let query = HistoryQuery {
+            start_time: start_time.into(),
+            end_time: end_time.into(),
+            limit: limit.into(),
+            symbol: symbol.into(),
+            interval: Some(interval.into()),
+            from_id: None,
+            period: None,
+        };
+        let data: Vec<Vec<Value>> = self.client.get_d("/dapi/v1/premiumIndexKlines", Some(query)).await?;
+
+        let klines = KlineSummaries::AllKlineSummaries(
+            data.iter()
+                .map(|row| KlineSummary {
+                    open_time: to_i64(&row[0]),
+                    open: to_f64(&row[1]),
+                    high: to_f64(&row[2]),
+                    low: to_f64(&row[3]),
+                    close: to_f64(&row[4]),
+                    volume: to_f64(&row[5]),
+                    close_time: to_i64(&row[6]),
+                    quote_asset_volume: to_f64(&row[7]),
+                    number_of_trades: to_i64(&row[8]),
+                    taker_buy_base_asset_volume: to_f64(&row[9]),
+                    taker_buy_quote_asset_volume: to_f64(&row[10]),
+                })
+                .collect(),
+        );
+        Ok(klines)
     }
 }

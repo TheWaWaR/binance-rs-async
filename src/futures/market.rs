@@ -333,7 +333,7 @@ impl FuturesMarket {
         Ok(klines)
     }
 
-    /// Returns up to 'limit' premium index Klines for given symbol and interval ("1m", "5m", ...)
+    /// Returns up to 'limit' premium index klines for given symbol and interval ("1m", "5m", ...)
     /// https://binance-docs.github.io/apidocs/futures/en/#premium-index-kline-data
     pub async fn get_premium_index_klines<S1, S2, S3, S4, S5>(
         &self,
