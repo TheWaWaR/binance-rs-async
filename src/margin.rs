@@ -33,7 +33,9 @@ static SAPI_USER_DATA_STREAM: &str = "/sapi/v1/userDataStream";
 static SAPI_USER_DATA_STREAM_ISOLATED: &str = "/sapi/v1/userDataStream/isolated";
 static SAPI_V1_BNB_BURN: &str = "/sapi/v1/bnbBurn";
 static SAPI_V1_MARGIN_INTEREST_RATE_HISTORY: &str = "/sapi/v1/margin/interestRateHistory";
+
 static SAPI_V1_PORTFOLIO_ACCOUNT: &str = "/sapi/v1/portfolio/account";
+static SAPI_V1_LOANABLE_DATA: &str = "/sapi/v1/loan/loanable/data";
 
 /// This struct acts as a gateway for all margin endpoints.
 /// Preferably use the trait [`crate::api::Binance`] to get an instance.
@@ -996,6 +998,24 @@ impl Margin {
     pub async fn portfolio_account(&self) -> Result<ClassicPortfolioMarginAccountInfo> {
         self.client
             .get_signed_p(SAPI_V1_PORTFOLIO_ACCOUNT, None::<()>, self.recv_window)
+            .await
+    }
+
+    /// Get interest rate and borrow limit of loanable assets. The borrow limit is shown in USD value.
+    pub async fn get_loanable_data(
+        &self,
+        loan_coin: Option<&str>,
+        vip_level: Option<i32>,
+    ) -> Result<Vec<LoanableData>> {
+        let mut query: serde_json::Value = serde_json::json!({});
+        if let Some(loan_coin) = loan_coin {
+            query["loanCoin"] = loan_coin.to_string().into();
+        }
+        if let Some(vip_level) = vip_level {
+            query["vipLevel"] = vip_level.into();
+        }
+        self.client
+            .get_signed_p(SAPI_V1_LOANABLE_DATA, Some(query), self.recv_window)
             .await
     }
 }

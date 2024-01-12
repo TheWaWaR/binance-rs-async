@@ -1971,6 +1971,46 @@ pub struct ClassicPortfolioMarginAccountInfo {
     pub account_type: String,
 }
 
+#[derive(Debug, Serialize, Deserialize, Clone)]
+#[serde(rename_all = "camelCase")]
+pub struct LoanableData {
+    loan_uoin: String,
+    vip_level: i32,
+    min_limit: i64,
+    max_limit: i64,
+
+    #[serde(rename = "_7dHourlyInterestRate")]
+    #[serde(with = "string_or_float")]
+    interest_rate_7h: f64,
+    #[serde(rename = "_7dDailyInterestRate")]
+    #[serde(with = "string_or_float")]
+    interest_rate_7d: f64,
+    #[serde(rename = "_14dHourlyInterestRate")]
+    #[serde(with = "string_or_float")]
+    interest_rate_14h: f64,
+    #[serde(rename = "_14dDailyInterestRate")]
+    #[serde(with = "string_or_float")]
+    interest_rate_14d: f64,
+    #[serde(rename = "_30dHourlyInterestRate")]
+    #[serde(with = "string_or_float")]
+    interest_rate_30h: f64,
+    #[serde(rename = "_30dDailyInterestRate")]
+    #[serde(with = "string_or_float")]
+    interest_rate_30d: f64,
+    #[serde(rename = "_90dHourlyInterestRate")]
+    #[serde(with = "string_or_float")]
+    interest_rate_90h: f64,
+    #[serde(rename = "_90dDailyInterestRate")]
+    #[serde(with = "string_or_float")]
+    interest_rate_90d: f64,
+    #[serde(rename = "_180dHourlyInterestRate")]
+    #[serde(with = "string_or_float")]
+    interest_rate_180h: f64,
+    #[serde(rename = "_180dDailyInterestRate")]
+    #[serde(with = "string_or_float")]
+    interest_rate_180d: f64,
+}
+
 pub mod string_or_float {
     use std::fmt;
 
