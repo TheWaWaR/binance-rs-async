@@ -1950,6 +1950,27 @@ pub struct ApiKeyPermissions {
     trading_authority_expiration_time: Option<u64>,
 }
 
+#[derive(Debug, Serialize, Deserialize, Clone)]
+#[serde(rename_all = "camelCase")]
+pub struct ClassicPortfolioMarginAccountInfo {
+    /// Classic Portfolio margin account maintenance margin rate
+    #[serde(with = "string_or_float")]
+    pub uni_mmr: f64,
+    /// Account equity, unit：USD
+    #[serde(with = "string_or_float")]
+    pub account_equity: f64,
+    /// Actual equity, unit：USD
+    #[serde(with = "string_or_float")]
+    pub actual_equity: f64,
+    /// Classic Portfolio margin account maintenance margin, unit：USD
+    #[serde(with = "string_or_float")]
+    pub account_maint_margin: f64,
+    /// Classic Portfolio margin account status:"NORMAL", "MARGIN_CALL", "SUPPLY_MARGIN", "REDUCE_ONLY", "ACTIVE_LIQUIDATION", "FORCE_LIQUIDATION", "BANKRUPTED" (TODO: use enum)
+    pub account_status: String,
+    /// PM_1 for classic PM, PM_2 for PM (TODO: use enum)
+    pub account_type: String,
+}
+
 pub mod string_or_float {
     use std::fmt;
 

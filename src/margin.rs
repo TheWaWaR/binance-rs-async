@@ -33,6 +33,7 @@ static SAPI_USER_DATA_STREAM: &str = "/sapi/v1/userDataStream";
 static SAPI_USER_DATA_STREAM_ISOLATED: &str = "/sapi/v1/userDataStream/isolated";
 static SAPI_V1_BNB_BURN: &str = "/sapi/v1/bnbBurn";
 static SAPI_V1_MARGIN_INTEREST_RATE_HISTORY: &str = "/sapi/v1/margin/interestRateHistory";
+static SAPI_V1_PORTFOLIO_ACCOUNT: &str = "/sapi/v1/portfolio/account";
 
 /// This struct acts as a gateway for all margin endpoints.
 /// Preferably use the trait [`crate::api::Binance`] to get an instance.
@@ -988,6 +989,13 @@ impl Margin {
                 None::<PairQuery>,
                 self.recv_window,
             )
+            .await
+    }
+
+    /// Get Classic Portfolio Margin Account Info (USER_DATA)
+    pub async fn portfolio_account(&self) -> Result<ClassicPortfolioMarginAccountInfo> {
+        self.client
+            .get_signed_p(SAPI_V1_PORTFOLIO_ACCOUNT, None::<()>, self.recv_window)
             .await
     }
 }
