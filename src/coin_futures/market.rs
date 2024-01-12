@@ -1,5 +1,6 @@
 use crate::client::Client;
 use crate::errors::Result;
+use crate::futures::rest_model::{FundingRate, HistoryQuery};
 use crate::rest_model::{OrderBook, PairQuery};
 
 use super::rest_model::MarkPrice;
@@ -30,5 +31,36 @@ impl CoinFuturesMarket {
             query["pair"] = pair.into();
         }
         self.client.get_d("/dapi/v1/premiumIndex", Some(query)).await
+    }
+
+    /// Get funding rate history
+    pub async fn get_funding_rate<S1, S3, S4, S5>(
+        &self,
+        symbol: S1,
+        start_time: S3,
+        end_time: S4,
+        limit: S5,
+    ) -> Result<Vec<FundingRate>>
+    where
+        S1: Into<String>,
+        S3: Into<Option<u64>>,
+        S4: Into<Option<u64>>,
+        S5: Into<u16>,
+    {
+        self.client
+            .get_signed_p(
+                "/dapi/v1/fundingRate",
+                Some(HistoryQuery {
+                    start_time: start_time.into(),
+                    end_time: end_time.into(),
+                    limit: limit.into(),
+                    symbol: symbol.into(),
+                    from_id: None,
+                    interval: None,
+                    period: None,
+                }),
+                self.recv_window,
+            )
+            .await
     }
 }
