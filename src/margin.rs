@@ -36,6 +36,7 @@ static SAPI_V1_MARGIN_INTEREST_RATE_HISTORY: &str = "/sapi/v1/margin/interestRat
 
 static SAPI_V1_PORTFOLIO_ACCOUNT: &str = "/sapi/v1/portfolio/account";
 static SAPI_V1_LOANABLE_DATA: &str = "/sapi/v1/loan/loanable/data";
+static SAPI_V1_LEVERAGE_BRACKET: &str = "/sapi/v1/margin/leverageBracket";
 
 /// This struct acts as a gateway for all margin endpoints.
 /// Preferably use the trait [`crate::api::Binance`] to get an instance.
@@ -1016,6 +1017,13 @@ impl Margin {
         }
         self.client
             .get_signed_p(SAPI_V1_LOANABLE_DATA, Some(query), self.recv_window)
+            .await
+    }
+
+    /// Query Liability Coin Leverage Bracket in Cross Margin Pro Mode
+    pub async fn get_leverage_bracket(&self) -> Result<Vec<LeverageBracket>> {
+        self.client
+            .get_signed_p(SAPI_V1_LEVERAGE_BRACKET, None::<()>, self.recv_window)
             .await
     }
 }

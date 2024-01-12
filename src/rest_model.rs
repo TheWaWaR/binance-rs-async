@@ -2011,6 +2011,28 @@ pub struct LoanableData {
     interest_rate_180d: f64,
 }
 
+#[derive(Debug, Serialize, Deserialize, Clone)]
+#[serde(rename_all = "camelCase")]
+pub struct LeverageBracket {
+    asset_names: Vec<String>,
+    rank: u64,
+    brackets: Vec<Bracket>,
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone)]
+#[serde(rename_all = "camelCase")]
+pub struct Bracket {
+    leverage: u64,
+    #[serde(with = "string_or_float")]
+    max_debt: f64,
+    #[serde(with = "string_or_float")]
+    maintenance_margin_rate: f64,
+    #[serde(with = "string_or_float")]
+    initial_margin_rate: f64,
+    #[serde(with = "string_or_float")]
+    fast_num: f64,
+}
+
 pub mod string_or_float {
     use std::fmt;
 
