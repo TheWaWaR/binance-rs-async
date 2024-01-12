@@ -140,6 +140,21 @@ impl Binance for crate::coin_futures::market::CoinFuturesMarket {
     }
 }
 
+#[cfg(feature = "coin_futures_api")]
+impl Binance for crate::coin_futures::account::CoinFuturesAccount {
+    fn new_with_config(api_key: Option<String>, secret_key: Option<String>, config: &Config) -> Self {
+        Self {
+            client: Client::new(
+                api_key,
+                secret_key,
+                config.coin_futures_rest_api_endpoint.clone(),
+                config.timeout,
+            ),
+            recv_window: config.recv_window,
+        }
+    }
+}
+
 #[cfg(feature = "margin_api")]
 impl Binance for crate::margin::Margin {
     fn new_with_config(api_key: Option<String>, secret_key: Option<String>, config: &Config) -> Self {
